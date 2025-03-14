@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "start": "node listen.ts"
+    "build": "tsc",
+    "start": "node dist/listen.js",
+    "dev": "ts-node src/listen.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",
