@@ -1,10 +1,10 @@
 import express from "express";
 import supabase from "../services/supabaseClient";
 
-const router = express.Router();
+const userRoutes = express.Router();
 
 // POST: Register user
-router.post("/", async (req, res) => {
+userRoutes.post("/", async (req, res) => {
   const { email, password } = req.body;
   const { data, error } = await supabase.auth.signUp({ email, password });
   if (error) {
@@ -15,7 +15,7 @@ router.post("/", async (req, res) => {
 });
 
 // PATCH: Update user
-router.patch("/", async (req, res) => {
+userRoutes.patch("/", async (req, res) => {
   const { userEmail, newEmail } = req.body;
   const { data, error } = await supabase.auth.updateUser({ email: newEmail });
   if (error) {
@@ -26,7 +26,7 @@ router.patch("/", async (req, res) => {
 });
 
 // DELETE: Remove user
-router.delete("/", async (req, res) => {
+userRoutes.delete("/", async (req, res) => {
   const { userEmail } = req.body;
   const { error } = await supabase.auth.admin.deleteUser(userEmail);
   if (error) {
@@ -36,4 +36,4 @@ router.delete("/", async (req, res) => {
   res.json({ message: "User deleted successfully" });
 });
 
-export default router;
+export default userRoutes;

@@ -2,10 +2,10 @@ import express from "express";
 import supabase from "../services/supabaseClient";
 import { authenticateUser } from "../middleware/authMiddleware";
 
-const router = express.Router();
+const collectionRoutes = express.Router();
 
 // GET: Get all collections for the user
-router.get("/", authenticateUser, async (req, res) => {
+collectionRoutes.get("/", authenticateUser, async (req, res) => {
   const { userEmail } = req.body;
   const { data, error } = await supabase
     .from("collections")
@@ -19,7 +19,7 @@ router.get("/", authenticateUser, async (req, res) => {
 });
 
 // POST: Create a new collection
-router.post("/", authenticateUser, async (req, res) => {
+collectionRoutes.post("/", authenticateUser, async (req, res) => {
   const { title, userEmail } = req.body;
   const { data, error } = await supabase
     .from("collections")
@@ -33,7 +33,7 @@ router.post("/", authenticateUser, async (req, res) => {
 });
 
 // PATCH: Update collection title
-router.patch("/", authenticateUser, async (req, res) => {
+collectionRoutes.patch("/", authenticateUser, async (req, res) => {
   const { id, title } = req.body;
   const { data, error } = await supabase
     .from("collections")
@@ -48,7 +48,7 @@ router.patch("/", authenticateUser, async (req, res) => {
 });
 
 // DELETE: Remove a collection
-router.delete("/", authenticateUser, async (req, res) => {
+collectionRoutes.delete("/", authenticateUser, async (req, res) => {
   const { id } = req.body;
   const { error } = await supabase.from("collections").delete().eq("id", id);
   if (error) {
@@ -58,4 +58,4 @@ router.delete("/", authenticateUser, async (req, res) => {
   res.json({ message: "Collection deleted successfully" });
 });
 
-export default router;
+export default collectionRoutes;

@@ -2,10 +2,10 @@ import express from "express";
 import supabase from "../services/supabaseClient";
 import { authenticateUser } from "../middleware/authMiddleware";
 
-const router = express.Router();
+const artRoutes = express.Router();
 
 // GET: Get all art in a collection
-router.get("/:collectionId", authenticateUser, async (req, res) => {
+artRoutes.get("/:collectionId", authenticateUser, async (req, res) => {
   const { collectionId } = req.params;
   const { data, error } = await supabase
     .from("art")
@@ -19,7 +19,7 @@ router.get("/:collectionId", authenticateUser, async (req, res) => {
 });
 
 // POST: Add an artwork to a collection
-router.post("/", authenticateUser, async (req, res) => {
+artRoutes.post("/", authenticateUser, async (req, res) => {
   const { artPath, collectionId } = req.body;
   const { data, error } = await supabase
     .from("art")
@@ -33,7 +33,7 @@ router.post("/", authenticateUser, async (req, res) => {
 });
 
 // DELETE: Remove artwork
-router.delete("/", authenticateUser, async (req, res) => {
+artRoutes.delete("/", authenticateUser, async (req, res) => {
   const { id } = req.body;
   const { error } = await supabase.from("art").delete().eq("id", id);
   if (error) {
@@ -43,4 +43,4 @@ router.delete("/", authenticateUser, async (req, res) => {
   res.json({ message: "Artwork deleted successfully" });
 });
 
-export default router;
+export default artRoutes;
