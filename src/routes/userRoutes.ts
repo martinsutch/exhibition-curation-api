@@ -1,9 +1,9 @@
 import express from "express";
 import supabase from "../services/supabaseClient";
+import { authenticateUser } from "../middleware/authMiddleware";
 
 const userRoutes = express.Router();
 
-// POST: Register user
 userRoutes.post("/", async (req, res) => {
   const { email, password } = req.body;
   const { data, error } = await supabase.auth.signUp({ email, password });
@@ -14,8 +14,29 @@ userRoutes.post("/", async (req, res) => {
   res.json(data);
 });
 
-// PATCH: Update user
-userRoutes.patch("/", async (req, res) => {
+userRoutes.post("/signIn", async (req, res) => {
+  const { email, password } = req.body;
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+  if (error) {
+    res.status(400).json({ error: error.message });
+    return;
+  }
+  res.json(data);
+});
+
+userRoutes.post("/signOut", async (req, res) => {
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    res.status(400).json({ error: error.message });
+    return;
+  }
+  res.json({ message: "Signed out successfully" });
+});
+
+userRoutes.patch("/", authenticateUser, async (req, res) => {
   const { userEmail, newEmail } = req.body;
   const { data, error } = await supabase.auth.updateUser({ email: newEmail });
   if (error) {
@@ -25,8 +46,7 @@ userRoutes.patch("/", async (req, res) => {
   res.json(data);
 });
 
-// DELETE: Remove user
-userRoutes.delete("/", async (req, res) => {
+userRoutes.delete("/", authenticateUser, async (req, res) => {
   const { userEmail } = req.body;
   const { error } = await supabase.auth.admin.deleteUser(userEmail);
   if (error) {
