@@ -20,10 +20,10 @@ collectionRoutes.get("/", authenticateUser, async (req, res) => {
 
 // POST: Create a new collection
 collectionRoutes.post("/", authenticateUser, async (req, res) => {
-  const { title, userEmail } = req.body;
+  const { title, userId } = req.body;
   const { data, error } = await supabase
     .from("collections")
-    .insert([{ title, user_email: userEmail }])
+    .insert([{ title, user_id: userId }])
     .select();
   if (error) {
     res.status(400).json({ error: error.message });
