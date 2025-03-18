@@ -6,7 +6,7 @@ const collectionRoutes = express.Router();
 
 // GET: Get all collections for the user
 collectionRoutes.get("/", authenticateUser, async (req, res) => {
-  const { userId } = req.body;
+  const { userId } = req;
   const { data, error } = await supabase
     .from("collections")
     .select("*")

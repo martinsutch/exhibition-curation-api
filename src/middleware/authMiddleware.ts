@@ -19,7 +19,7 @@ export const authenticateUser = async (
       return;
     }
 
-    req.body.userEmail = data.user.email;
+    req.userId = data.user.id;
     next();
   } catch (err) {
     res.status(500).json({ error: "Server error" });
