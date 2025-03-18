@@ -6,11 +6,11 @@ const collectionRoutes = express.Router();
 
 // GET: Get all collections for the user
 collectionRoutes.get("/", authenticateUser, async (req, res) => {
-  const { userEmail } = req.body;
+  const { userId } = req.body;
   const { data, error } = await supabase
     .from("collections")
     .select("*")
-    .eq("user.email", userEmail);
+    .eq("user_id", userId);
   if (error) {
     res.status(400).json({ error: error.message });
     return;
