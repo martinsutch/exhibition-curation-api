@@ -21,7 +21,7 @@ artRoutes.get("/:collectionId", authenticateUser, async (req, res) => {
 
   const { data: artData, error: artError } = await supabase
     .from("art")
-    .select("artpath")
+    .select("*")
     .eq("collection_id", collectionId);
 
   res.json({
