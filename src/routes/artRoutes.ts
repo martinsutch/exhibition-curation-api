@@ -21,7 +21,7 @@ artRoutes.get("/:collectionId", authenticateUser, async (req, res) => {
 
   const { data: artData, error: artError } = await supabase
     .from("art")
-    .select("artPath")
+    .select("artpath")
     .eq("collection_id", collectionId);
 
   res.json({
@@ -35,7 +35,7 @@ artRoutes.post("/", authenticateUser, async (req, res) => {
   const { artPath, collectionId } = req.body;
   const { data, error } = await supabase
     .from("art")
-    .insert([{ artPath, collection_id: collectionId }])
+    .insert([{ artpath: artPath, collection_id: collectionId }])
     .select();
   if (error) {
     res.status(400).json({ error: error.message });
