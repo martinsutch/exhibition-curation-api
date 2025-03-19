@@ -7,15 +7,30 @@ const artRoutes = express.Router();
 // GET: Get all art in a collection
 artRoutes.get("/:collectionId", authenticateUser, async (req, res) => {
   const { collectionId } = req.params;
-  const { data, error } = await supabase
-    .from("art")
-    .select("*")
-    .eq("collection.id", collectionId);
-  if (error) {
-    res.status(400).json({ error: error.message });
+
+  const { data: collectionData, error: collectionError } = await supabase
+    .from("collections")
+    .select("title")
+    .eq("id", collectionId)
+    .single();
+
+  if (collectionError) {
+    res.status(400).json({ error: collectionError.message });
     return;
   }
-  res.json(data);
+
+  const { data: artData, error: artError } = await supabase
+    .from("art")
+    .select("artPath")
+    .eq("collection_id", collectionId);
+  if (artError) {
+    res.status(400).json({ error: artError.message });
+    return;
+  }
+  res.json({
+    collectionTitle: collectionData.title,
+    art: artData,
+  });
 });
 
 // POST: Add an artwork to a collection
