@@ -23,13 +23,10 @@ artRoutes.get("/:collectionId", authenticateUser, async (req, res) => {
     .from("art")
     .select("artPath")
     .eq("collection_id", collectionId);
-  if (artError) {
-    res.status(400).json({ error: artError.message });
-    return;
-  }
+
   res.json({
     collectionTitle: collectionData.title,
-    art: artData,
+    art: artData || [],
   });
 });
 
