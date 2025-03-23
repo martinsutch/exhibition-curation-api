@@ -14,6 +14,24 @@ userRoutes.post("/", async (req, res) => {
   res.json(data);
 });
 
+userRoutes.get("/", authenticateUser, async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    res.status(400).json({ error: "Token is missing" });
+    return;
+  }
+  const { data, error } = await supabase.auth.getUser(token);
+
+  if (error) {
+    res.status(401).json({ error: "Invalid or expired token" });
+    return;
+  }
+
+  res.status(200).json({ message: "Token is valid", user: data });
+  return;
+});
+
 userRoutes.post("/signIn", async (req, res) => {
   const { email, password } = req.body;
   const { data, error } = await supabase.auth.signInWithPassword({
